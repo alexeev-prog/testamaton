@@ -1,0 +1,34 @@
+[project]
+name = "testamaton"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Alexeev Bronislav", email = "alexeev.dev@mail.ru" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "aiohttp>=3.13.3",
+    "asyncio>=4.0.0",
+    "click>=8.3.1",
+    "rich>=14.3.1",
+]
+
+[project.scripts]
+testamaton = "testamaton:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "furo>=2025.12.19",
+    "mypy>=1.19.1",
+    "nox>=2025.11.12",
+    "pytest>=9.0.2",
+    "pytest-cov>=7.0.0",
+    "pytest-sugar>=1.1.1",
+    "ruff>=0.14.14",
+    "sphinx>=9.1.0",
+]
