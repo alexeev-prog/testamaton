@@ -26,6 +26,7 @@ dev = [
     "furo>=2025.12.19",
     "mypy>=1.19.1",
     "nox>=2025.11.12",
+    "pyrefly>=0.50.1",
     "pytest>=9.0.2",
     "pytest-cov>=7.0.0",
     "pytest-sugar>=1.1.1",
