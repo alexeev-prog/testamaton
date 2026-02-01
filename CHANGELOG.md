@@ -1,3 +1,9 @@
+commit e8e9b204b00c45aaa8767567b20f8b02f3c36318
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sun Feb 1 19:25:03 2026 +0700
+
+    update code and add test_case.py
+
 commit 6ff2efa7f32e88a4ee00aea00105d37b652279be
 Merge: e17d17e d8daa52
 Author: Alexeev Bronislav <alexeev.dev@mail.ru>

@@ -1,8 +1,8 @@
 import platform
 import shutil
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Optional
-from dataclasses import dataclass
 
 from rich import box, print
 from rich.console import Console

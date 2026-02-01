@@ -1,7 +1,7 @@
 from functools import partial, wraps
+from logging import Logger, getLogger
 from time import time
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple, Union
-from logging import getLogger, Logger
 
 from testamaton.exceptions import TestError
 from testamaton.reporter import print_header, print_results_table

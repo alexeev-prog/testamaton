@@ -5,10 +5,10 @@ from typing import Any, Awaitable, Callable, List, Union
 
 from testamaton.exceptions import SkippedTestException, TestError
 from testamaton.reporter import (
+    TestResult,
     print_header,
     print_platform,
     print_test_result,
-    TestResult,
 )
 from testamaton.standard import ExpectFailMarkup, SkipMarker
 

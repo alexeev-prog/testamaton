@@ -1,6 +1,6 @@
 from functools import wraps
 from time import time
-from typing import Callable, Awaitable, Any
+from typing import Any, Awaitable, Callable
 
 from rich import print
 

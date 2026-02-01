@@ -1,3 +1,3 @@
-from logging import Logger, getLogger, NullHandler
+from logging import Logger, NullHandler, getLogger
 
 tlogger: Logger = getLogger(__name__).addHandler(NullHandler())
