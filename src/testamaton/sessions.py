@@ -19,9 +19,8 @@ class Runner:
         self.tests_count = len(self.tests)
         self.testcase = testcase
 
-    def _print_prelude(self):
+    def _print_prelude(self) -> None:
         print_header("runner session starts")
-
         print_platform(self.tests_count)
 
     def _run_testinfo(self, test: Union[Callable, Awaitable], *args, **kwargs) -> Any:
@@ -32,7 +31,7 @@ class Runner:
 
         return result
 
-    def _run_test_cycle(self, test_name: str, test: Union[Awaitable, Callable]) -> Any:
+    def _run_test_cycle(self, test: Union[Awaitable, Callable]) -> Any:
         for n in range(test.__testamatonmeta.count_of_launchs):
             if test.__testamatonmeta.arguments:
                 for argument in test.__testamatonmeta.arguments:
@@ -42,7 +41,9 @@ class Runner:
 
         return result
 
-    def _check_warnings(self, result: Any, results: list, percent: int, test_name: str):
+    def _check_warnings(
+        self, result: Any, results: list, percent: int, test_name: str
+    ) -> None:
         if len(results) > 0 and results[-1] == result and result is not None:
             print_test_result(
                 TestResult(
@@ -79,7 +80,7 @@ class Runner:
                         marker.reason if marker.reason else "SkippedTest"
                     )
             elif isinstance(test.__testamatonmeta.marker, ExpectFailMarkup):
-                marker = test.__testamatonmeta.marker
+                marker: ExpectFailMarkup = test.__testamatonmeta.marker
 
             result = self._run_test_cycle(test_name, test)
 
@@ -126,14 +127,6 @@ class Runner:
 
             print_test_result(percent, test_name, comment=test.__testamatonmeta.comment)
 
-    def launch_test_chain(self, tags: List[str]):
-        """
-        Launch test chain
-
-        :raises		SkippedTestException:  skip test
-
-        :param		tags:  The tags
-        :type		tags:  List[str]
-        """
+    def launch_test_chain(self, tags: List[str]) -> None:
         for test_num, (test_name, test) in enumerate(self.tests.items(), start=1):
             self._processing_tests_execution(tags, test_num, test_name, test)
