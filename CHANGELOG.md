@@ -1,3 +1,9 @@
+commit b5f5725802fef46f33e8ad6e0f9ebd8f46b2b9aa
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sun Feb 1 19:29:18 2026 +0700
+
+    docs: update docs generation
+
 commit b2372c485b4b6877284eeb0422eaa352c008431a
 Author: Alexeev Bronislav <alexeev.dev@mail.ru>
 Date:   Sun Feb 1 19:25:49 2026 +0700

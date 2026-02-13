@@ -67,6 +67,16 @@ class TestOutcome(Enum):
         return not self.will_fail_session
 
 
+class FixtureScope(Enum):
+    """Область видимости фикстуры"""
+
+    FUNCTION = auto()
+    CLASS = auto()
+    SESSION = auto()
+    MODULE = auto()
+    PACKAGE = auto()
+
+
 @dataclass
 class Argument:
     args: list = field(default_factory=list)
@@ -116,14 +126,21 @@ class CollectionMetadata:
     arguments: list = field(default_factory=list)
     count_of_launchs: int = 1
     is_fixture: bool = False
+    fixture_scope: Optional[FixtureScope] = None
+    fixture_autouse: bool = False
+    fixture_names: list = field(default_factory=list)
 
 
 @dataclass
 class Fixture:
     handler: Union[Awaitable, Callable]
+    scope: FixtureScope = FixtureScope.FUNCTION
+    name: str = ""
+    autouse: bool = False
     gen: Union[Generator, AsyncGenerator, None] = None
     resolved_val: Any = None
+    cache_key: str = ""
 
     @property
     def metadata(self):
-        return self.handler.pztdmeta
+        return getattr(self.handler, "_testamatonmeta", None)

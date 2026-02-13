@@ -4,7 +4,7 @@ from time import time
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple, Union
 
 from testamaton.exceptions import TestError
-from testamaton.reporter import print_header, print_results_table
+from testamaton.reporter import print_header, print_results_table, TestsExeecutionReport
 from testamaton.sessions import Runner
 from testamaton.standard import (
     Argument,
@@ -35,9 +35,9 @@ def skip(
     marker = SkipMarker(reason=reason, when=when)
 
     if hasattr(func, "ward_meta"):
-        func.__testamatonmeta.marker = marker
+        func._testamatonmeta.marker = marker
     else:
-        func.__testamatonmeta = CollectionMetadata(marker=marker)
+        func._testamatonmeta = CollectionMetadata(marker=marker)
 
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -61,10 +61,10 @@ def expectfail(
     func: Union[str, Callable, None] = func_or_reason
     marker = ExpectFailMarkup(reason=reason, when=when)
 
-    if hasattr(func, "__testamatonmeta"):
-        func.__testamatonmeta.marker = marker
+    if hasattr(func, "_testamatonmeta"):
+        func._testamatonmeta.marker = marker
     else:
-        func.__testamatonmeta = CollectionMetadata(marker=marker)
+        func._testamatonmeta = CollectionMetadata(marker=marker)
 
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -95,10 +95,10 @@ class TestCase(BaseTestCase):
         def wrapper(
             func: Union[Awaitable, Callable], *args, **kwargs
         ) -> Union[Awaitable, Callable]:
-            if not hasattr(func, "__testamatonmeta"):
-                func.__testamatonmeta = CollectionMetadata(is_fixture=True)
+            if not hasattr(func, "_testamatonmeta"):
+                func._testamatonmeta = CollectionMetadata(is_fixture=True)
             else:
-                func.__testamatonmeta.is_fixture = True
+                func._testamatonmeta.is_fixture = True
 
             self.fixtures[func.__name__] = Fixture(handler=func)
 
@@ -118,20 +118,20 @@ class TestCase(BaseTestCase):
         def wrapper(
             func: Union[Awaitable, Callable], *args, **kwargs
         ) -> Union[Awaitable, Callable]:
-            if not hasattr(func, "__testamatonmeta"):
-                func.__testamatonmeta = CollectionMetadata(
+            if not hasattr(func, "_testamatonmeta"):
+                func._testamatonmeta = CollectionMetadata(
                     comment=comment.format(**kwargs) if comment is not None else None,
                     tags=tags,
                     arguments=arguments,
                     count_of_launchs=count_of_launchs,
                 )
             else:
-                func.__testamatonmeta.comment = (
+                func._testamatonmeta.comment = (
                     comment.format(**kwargs) if comment is not None else None
                 )
-                func.__testamatonmeta.tags = tags
-                func.__testamatonmeta.arguments = arguments
-                func.__testamatonmeta.count_of_launchs = count_of_launchs
+                func._testamatonmeta.tags = tags
+                func._testamatonmeta.arguments = arguments
+                func._testamatonmeta.count_of_launchs = count_of_launchs
 
             self.tags = list(set(self.tags + tags))
 
@@ -156,7 +156,13 @@ class TestCase(BaseTestCase):
         )
 
         print_results_table(
-            len(self.tests), self.passed, self.warnings, self.errors, self.skipped
+            TestsExeecutionReport(
+                total=len(self.tests),
+                passed=self.passed,
+                warnings=self.warnings,
+                errors=self.errors,
+                skipped=self.skipped,
+            )
         )
 
 

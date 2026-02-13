@@ -32,9 +32,9 @@ class Runner:
         return result
 
     def _run_test_cycle(self, test: Union[Awaitable, Callable]) -> Any:
-        for n in range(test.__testamatonmeta.count_of_launchs):
-            if test.__testamatonmeta.arguments:
-                for argument in test.__testamatonmeta.arguments:
+        for n in range(test._testamatonmeta.count_of_launchs):
+            if test._testamatonmeta.arguments:
+                for argument in test._testamatonmeta.arguments:
                     result = self._run_testinfo(test, *argument.args, **argument.kwargs)
             else:
                 result = self._run_testinfo(test)
@@ -72,17 +72,17 @@ class Runner:
         try:
             if tags and list(set(tags) & set(test.tags)):
                 raise SkippedTestException()
-            elif isinstance(test.__testamatonmeta.marker, SkipMarker):
-                marker = test.__testamatonmeta.marker
+            elif isinstance(test._testamatonmeta.marker, SkipMarker):
+                marker = test._testamatonmeta.marker
 
                 if marker.when:
                     raise SkippedTestException(
                         marker.reason if marker.reason else "SkippedTest"
                     )
-            elif isinstance(test.__testamatonmeta.marker, ExpectFailMarkup):
-                marker: ExpectFailMarkup = test.__testamatonmeta.marker
+            elif isinstance(test._testamatonmeta.marker, ExpectFailMarkup):
+                marker: ExpectFailMarkup = test._testamatonmeta.marker
 
-            result = self._run_test_cycle(test_name, test)
+            result = self._run_test_cycle(test)
 
             self._check_warnings(result, results, percent, test_name)
 
@@ -95,7 +95,7 @@ class Runner:
                     label=test_name,
                     status="skip",
                     postmessage=str(ex),
-                    comment=test.__testamatonmeta.comment,
+                    comment=test._testamatonmeta.comment,
                 )
             )
         except (AssertionError, TestError):
@@ -109,7 +109,7 @@ class Runner:
                         status="error",
                         output=traceback.format_exc(),
                         postmessage=marker.reason if marker.reason else "XFAIL",
-                        comment=test.__testamatonmeta.comment,
+                        comment=test._testamatonmeta.comment,
                     )
                 )
             else:
@@ -119,13 +119,19 @@ class Runner:
                         label=test_name,
                         status="error",
                         output=traceback.format_exc(),
-                        comment=test.__testamatonmeta.comment,
+                        comment=test._testamatonmeta.comment,
                     )
                 )
         else:
             self.testcase.passed += 1
 
-            print_test_result(percent, test_name, comment=test.__testamatonmeta.comment)
+            print_test_result(
+                TestResult(
+                    percent=percent,
+                    label=test_name,
+                    comment=test._testamatonmeta.comment,
+                )
+            )
 
     def launch_test_chain(self, tags: List[str]) -> None:
         for test_num, (test_name, test) in enumerate(self.tests.items(), start=1):
